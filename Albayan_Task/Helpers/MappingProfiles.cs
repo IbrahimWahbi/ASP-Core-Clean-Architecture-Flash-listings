@@ -8,6 +8,7 @@ namespace Albayan_Task.Helpers
 {
     public class MappingProfiles : Profile
     {
+        // init Auto mapper basicly we us it for loclization
         public MappingProfiles()
         {
             CreateMap<Category, DTOCategory>().ForMember

@@ -25,10 +25,16 @@ namespace Albayan_Task.Controllers
             _productsService = productsService;
         }
 
+        /// <summary>
+        /// add product 
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<long>> Add(DtoAddProduct product)
         {
+            // make sure category is there
             if (product.CategoryID== 0)
             {
                 return BadRequest(new APIValidationErrorResponce
@@ -42,6 +48,11 @@ namespace Albayan_Task.Controllers
             return response;
         }
 
+        /// <summary>
+        /// get all product that are in activation duration and must shown
+        /// </summary>
+        /// <param name="lang"></param>
+        /// <returns></returns>
         [HttpGet()]
         [Route("{lang}")]
         public async Task<ActionResult<List<DTOProducts>>> Get(string? lang="en")
@@ -50,19 +61,26 @@ namespace Albayan_Task.Controllers
             return response;
         }
 
-
-        //[Authorize]
+        /// <summary>
+        /// update product
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpPut]
         [Route("{productId}")]
         public async Task< ActionResult<bool>> Update(int productId,DtoAddProduct model)
         {
             model.Id = productId;
+            // make sure product is there
             if (_productsService.GetProductById(productId) == null)
                 return NotFound(new APIValidationErrorResponce
                 {
                     Errors = new
                         [] { "product not found" }
                 });
+            // make sure category is there
             else if (!await _categoriesService.isAvilable(productId))
                 return NotFound(new APIValidationErrorResponce
                 {
@@ -73,6 +91,7 @@ namespace Albayan_Task.Controllers
             return response;
         }
 
+        // delete product 
         [Authorize]
         [HttpDelete("{productId}")]
         public async Task <ActionResult> Delete(int productId)

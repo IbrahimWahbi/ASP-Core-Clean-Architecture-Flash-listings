@@ -34,7 +34,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-
+// edentity model configuration
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 6;
@@ -47,7 +47,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 
-
+// Error handling method
 builder.Services.Configure<ApiBehaviorOptions>(options =>
               options.InvalidModelStateResponseFactory = ActionContext =>
               {
@@ -63,6 +63,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
               }
             );
 
+// add auth and jwt
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -85,6 +86,8 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
+
+// init Swagger for API test and make it fimilure with Bearer token
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -118,6 +121,8 @@ builder.Services.AddSwaggerGen(c =>
                 });
 });
 
+
+// the dip injection
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped<MyDbContext, MyDbContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -142,6 +147,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// middleware for error handling it gaves form for error
 app.UseMiddleware<ExceptionMiddle>();
 
 app.UseHttpsRedirection();
